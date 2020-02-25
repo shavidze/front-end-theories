@@ -28,7 +28,8 @@
                        6. ngAfterViewInit - დაიქოლება ერთადერთხელ, როცა წარმატებით ჩაიტვირთა ყველა შვილი კომპონენტი ngAfterContentChecked ამის შემდეგ.
                        7. ngAfterViewChecked - პირველად გამოიძახება ngAfterViewInit-ის მერე, მაგრამ ამის მერე ყოველ მცირე ჩეინჯზე ngDoCheck-ის მერე რიგში მოყვება ngAfterContentChecked-ს.
                        8. ngOnDestroy - გამოიძახება როდესაც კომპონენტი საჭიროებს წაშლას, მაგალითად კლიკზე გვინდა რომ გამოჩნდეს და გაქრეს კომპონენტი, როდესაც ვაქრობთ გამოიძახება ngOnDestroy.
-                                                      
+  
+  9. ** Angular Compiler** 
                                                       
                                                       
   
