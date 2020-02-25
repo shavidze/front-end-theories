@@ -29,7 +29,18 @@
                        7. ngAfterViewChecked - პირველად გამოიძახება ngAfterViewInit-ის მერე, მაგრამ ამის მერე ყოველ მცირე ჩეინჯზე ngDoCheck-ის მერე რიგში მოყვება ngAfterContentChecked-ს.
                        8. ngOnDestroy - გამოიძახება როდესაც კომპონენტი საჭიროებს წაშლას, მაგალითად კლიკზე გვინდა რომ გამოჩნდეს და გაქრეს კომპონენტი, როდესაც ვაქრობთ გამოიძახება ngOnDestroy.
   
-  9. ** Angular Compiler** 
-                                                      
-                                                      
+  9. **როგორ მუშაობს ანგულარი** - დავუშვათ გვაქვს ერთი ესეთი პატარა კომპონენტი
+                                                     *@Component({
+                                                        selector: 'app-root',
+                                                        templateUrl: `
+                                                          <img src="cat.jpg">
+                                                          <h1> {{header}} </h1>
+                                                          <info-card [name]="name"></info-card>
+                                                          <footer></footer>
+                                                        `,
+                                                        styleUrls: [ './app.component.css' ]
+                                                      })
+                                                      export class AppComponent  {...}*
+ 
+                                                                                     
   
