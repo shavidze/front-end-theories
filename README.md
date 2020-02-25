@@ -68,5 +68,18 @@
                                               
   ამ ინსტრუქციებს კი უკვე runtime-ი დააიმპლემენტირებს. მოდი მოკლედ განვმარტოთ რა რას აკეთებს. ანგულარის კომპილატორი პირველ რიგში უყურებს ტემპლეიტს, რომელსაც გადაწერს ფუნქციის სახით,რომელსაც ფრეიმვორქი მიაწვდის იმის შესახებ ინფორმაციას ეს ტემპლეიტი იქმნება(renderFlags.Create) თუ აფდეითდება(renderFlags.Update); აი მაგალითად ამ შემთხვევაში ფრეიმვორქი აკეთებს ეგეთ რამეს: 
 ჯერ გამოიძახებს მშობელი კომპონენტის template-ის create-ს : *App.ngComponentDef.template(create,app)*, შემდეგ უკვე *InfoCard.ngComponentDef.template(create,info)* და *Footer.ngComponentDef.template(create,footer)* 
+template ფუნქციაში იყენებენ ანგულარის ფრეიმვორქის ინსტრუქციებს, რომლების თავისი აზრით იყოფა 2 სახის ინსტრუქციად:  Creation Instructions და Update Instructions. **Creation-ებია**: element() -რომელიც ქმნის ელემენტს,რომლის მაგალითსაც ქვემოთ დავწერ თუ როგორ მუშაობს,text(),template(),pipe(),listener() ... ხოლო **Update-ებია**: property(), attribute(),stypeProp(),pipeBind() და ა.შ.
+
+მოდი დავწეროთ ერთ-ერთი ტემპლეიტის ინსტრუქცია element-ი როგორ მუშაობს.
+                                                            
+                                                            function element(index,tag,attrs){
+                                                                const el = document.createElement(tag);
+                                                                const parent = getCurrentParent();
+                                                                setAttributes(el,attrs);
+                                                                parent.appendChild(el);
+                                                                const lView = getLView();
+                                                                lView[index] = el;
+                                                           }
+ როგორც ვხედავთ ესაა ჩვეულებრივი plain js ფუნქცია, არაფერი განასკუთრებული.მოდი ვისაუბროთ რა არის lView და რატომ ვინახავთ ელემენტს კოკნკრეტულ ინდექსზე. ესეიგი, ჩვენ ვიცით რომ Change Detection-ზე ჩვენ დაგვჭირდება ესა თუ ის კომპონენტი დავიჭიროთ და დავააფდეითოთ. რა თქმა უნდა შეგვიძლია DOM API გამოვიყენოთ და ისე ამოვიღოთ ეს ელემენტი, მაგრამ ეს საკმაოდ ძვირი ოპერაციაა, ამიტომ გვაქვს რაღაც ანგულარის შიდა სთორიჯი, რომელშიც კონკრეტულ ელემენტის ინდექსზე შევინახავთ ამ ელემენტს, ყოველ კომპონენტსს აქვს თავისი LView(Logical View).
                                                                                      
   
