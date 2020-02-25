@@ -30,7 +30,8 @@
                        8. ngOnDestroy - გამოიძახება როდესაც კომპონენტი საჭიროებს წაშლას, მაგალითად კლიკზე გვინდა რომ გამოჩნდეს და გაქრეს კომპონენტი, როდესაც ვაქრობთ გამოიძახება ngOnDestroy.
   
   9. **როგორ მუშაობს ანგულარი** - დავუშვათ გვაქვს ერთი ესეთი პატარა კომპონენტი
-                                                     *@Component({
+  
+                                                     \@Component({
                                                         selector: 'app-root',
                                                         templateUrl: `
                                                           <img src="cat.jpg">
@@ -40,7 +41,32 @@
                                                         `,
                                                         styleUrls: [ './app.component.css' ]
                                                       })
-                                                      export class AppComponent  {...}*
- 
+                                                      export class AppComponent  {...}\
+     
+       
+       როდესაც ტაიპსკრიპტი კომპილირდება ჯს-ში, ასევე საჭიროა ანგულარის კოდი გადაითარგმნოს runtime-სთვის გასაგებ ენაზე. რას აკეთებს ანგულარის კომპილატორი ამისთვის, აიღებს ამ კომპონენტს და გადაწერს ასე, ამ ინსტრუქციებით:
+                                                      
+                                                      \AppComponent.ngComponentDef = defineComponent({
+                                                          selectors:[['app-root']],
+                                                          template: function(renderFlags,context){
+                                                            if(renderFlags && renderFlags.Create){
+                                                              element(0,'img',['src','cat.jpg']);
+                                                              elementStart(1,'h1');
+                                                              text(2);
+                                                              elementEnd();
+                                                              element(3,'info-card');
+                                                              element(4,'footer');
+                                                            }
+                                                            if(renderFlags && renderFlags.Update)
+                                                            {
+                                                              advance(2);
+                                                              textInterpolation1('',context.header,'');
+                                                            }
+                                                          }
+                                                      })/
+     
+                                              
+  ამ ინსტრუქციებს კი უკვე runtime-ი დააიმპლემენტირებს. მოდი მოკლედ განვმარტოთ რა რას აკეთებს. ანგულარის კომპილატორი პირველ რიგში უყურებს ტემპლეიტს, რომელსაც გადაწერს ფუნქციის სახით,რომელსაც ფრეიმვორქი მიაწვდის იმის შესახებ ინფორმაციას ეს ტემპლეიტი იქმნება(renderFlags.Create) თუ აფდეითდება(renderFlags.Update); აი მაგალითად ამ შემთხვევაში ფრეიმვორქი აკეთებს ეგეთ რამეს: 
+ჯერ გამოიძახებს მშობელი კომპონენტის template-ის create-ს : *App.ngComponentDef.template(create,app)*, შემდეგ უკვე *InfoCard.ngComponentDef.template(create,info)* და *Footer.ngComponentDef.template(create,footer)* 
                                                                                      
   
