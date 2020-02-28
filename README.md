@@ -12,25 +12,25 @@
 5. **Closure** - ეს არის ფუნქციის Scope-ში არსებული ობიექტი, სადაც ინახება ამ ფუნქციის ზედა ფუნქციაში(ებში) არსებული ცვლადები. როდესაც დაგვჭირდება ისინი ჯერ ვნახავთ თუ არსებობენ ქლოჟერში თუ არადა ზემოთ დაიწყება ძებნა ინიციალიზაციისთვის. პატარა მაგალითი:
                  
                 function useState(){
-    let state = 0;
+                    let state = 0;
 
-    return function(increaseState){
-        state += increaseState;
-        console.log(state);
-    }
-}
+                    return function(increaseState){
+                        state += increaseState;
+                        console.log(state);
+                    }
+                }
 
-var st = useState();
+                var st = useState();
 
-console.log(st(1)); // აქ დაბეჭდავს 1
+                console.log(st(1)); // აქ დაბეჭდავს 1
 
-console.log(st(1)); // აქ დაბეჭდავს უკვე 2ს; 
+                console.log(st(1)); // აქ დაბეჭდავს უკვე 2ს; 
 
-// რომ ჩავიხედოთ 2 რატომ დაბეჭდა 
+                // რომ ჩავიხედოთ 2 რატომ დაბეჭდა 
 
-console.dir(st);
+                console.dir(st);
 
-// პირველ რიგში ნახულობს ეგეთი ცვლადი state უკვე ხომ არ აქვს ქლოჟერში შენახული, Scope -> Closure -> state და აგერ მანდ შეუნახავს.
+                // პირველ რიგში ნახულობს ეგეთი ცვლადი state უკვე ხომ არ აქვს ქლოჟერში შენახული, Scope -> Closure -> state და აგერ მანდ შეუნახავს.
 
 
 6. **Async/Await** - არის ES6-ის Keywords. Async ფუნქცია ყოველთვის აბრუნებს Promise-ს.
