@@ -153,3 +153,37 @@ template ფუნქციაში იყენებენ ანგულა
                      2. Behaviour Subject - იგივეა რაც Subject,ერთი განსხვავებით რომ როდესაც მეორე ობზერვერი შემოუერთდება ბოლო დაემიტებულ Value რომლის დაჭერა ვერ მოასწრო იმასაც დაუემიტებს.
                      3. Reply Subject - იგივე Behaviour Subject, ერთი განსხვავებით რომ როდესაც მეორე ობზერვეი შემოუერთდება ყველა მაქამდე არსებულ Value რომლის დაჭერა ვერ მოასწრო იმასაც დაუემიტებს.
                      4. Async Subject - გაატარებს ყველა Values , მხოლოდ გაატანს ბოლოს ობზერვერებისთვის.
+15. **Zone.js** — zone-არის execution context, რომელიც საშუალებას გვაძლევს დავრაპოთ ორიგინალი ასინქრონული ფუნქციები და სანამ ორიგინალი გაეშვება მანამდე და მაგის მერეც რაიმე კოდი დავაგენერიროთ. უფრო კარგად, რომ დავინახოთ: 
+                       
+                       var Zone = {
+                            run: function (callback) {
+                                if (this.beforeTask) {
+                                    this.beforeTask();
+                                }
+                                callback();
+
+                                if (this.afterTask) {
+                                    this.afterTask();
+                                }
+                            }
+                        }
+
+                        Zone.beforeTask = () => { console.log("BEFORE TASK") }
+
+                        Zone.afterTask = () => { console.log("AFTER TASK") }
+
+                        //Zone.run(() => { console.log("HELLO ZONE") })
+
+
+                        // დავრაპოთ ორიგინალი setTimeout
+
+                        var _setTimeout = setTimeout;
+
+                        setTimeout = (callback, timeout) => {
+                            Zone.run(() => {
+                                _setTimeout(callback, timeout);
+                            })
+                        }
+
+                       setTimeout(() => console.log("Set Time Out is running"), 1000);
+     ანგულარი იყენებს zone.js ,დავრაპული აქვს ყველა ასინქრონული ფუნქცია და zone-ში უშვებს, ამ ფუნქციებს და შემდეგ კი უკვე ჩეინჯ დეტექშენს აღძრავს, რათა გაიგოს თუკი რაიმე შეიცვალა რომ დომი დააფდეითოს. მარტივად შეგიძლიათ ნახოთ, რომ main.ts-ფაილში თუ გავითიშავთ ng-zones, *platformBrowserDynamic().bootstrapModule(AppModule,[{ngZone:'noop'}]).catch(err => console.error(err))*-ასე, ვნახავთ რომ სულ მცირე დომის ივენთზეც კი, მაგალითად კლიკზე გვინდა გავზარდოთ ცვლადი და დომში დავააფდეითოთ, დავინახავთ რომ ცვლადი გაიზრდება მაგრამ დომში არაფერი არ მოხდება, რადგან ჩეინჯ დეტექშენზე გაშვებას აკეთებს zone.js რომელიც გავთიშეთ.
