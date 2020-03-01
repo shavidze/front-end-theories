@@ -187,3 +187,24 @@ template ფუნქციაში იყენებენ ანგულა
 
                        setTimeout(() => console.log("Set Time Out is running"), 1000);
      ანგულარი იყენებს zone.js ,დავრაპული აქვს ყველა ასინქრონული ფუნქცია და zone-ში უშვებს, ამ ფუნქციებს და შემდეგ კი უკვე ჩეინჯ დეტექშენს აღძრავს, რათა გაიგოს თუკი რაიმე შეიცვალა რომ დომი დააფდეითოს. მარტივად შეგიძლიათ ნახოთ, რომ main.ts-ფაილში თუ გავითიშავთ ng-zones, *platformBrowserDynamic().bootstrapModule(AppModule,[{ngZone:'noop'}]).catch(err => console.error(err))*-ასე, ვნახავთ რომ სულ მცირე დომის ივენთზეც კი, მაგალითად კლიკზე გვინდა გავზარდოთ ცვლადი და დომში დავააფდეითოთ, დავინახავთ რომ ცვლადი გაიზრდება მაგრამ დომში არაფერი არ მოხდება, რადგან ჩეინჯ დეტექშენზე გაშვებას აკეთებს zone.js რომელიც გავთიშეთ.
+
+16. **Decorators in Typescript** — ტაიპსკრიპტმა ექსპერიმენტების ფარგლებში წარადგინა ახალი feature, დეკორატორები, რომელიც მსგავსია C#,Swift - attribute ტეგების. დეკორატორები არიან ფუნქციები რომელიც ეშვებიან runtime-ში, ხოლო არგუმენტად იღებენ იმ გამოსახულებას რომელიც მოსდევთ აღწერის შემდეგ: კლასები,მეთოდები,პარამეტრები თუ უბრალოდ property-ები.
+                                    
+                                    function LogClass(constructor: Function) {
+                                        console.log('LogClass decorator executed for the constructor:');
+                                        console.log("class =", constructor);
+
+                                        console.log("-------------------")
+                                   }
+     @LogClass რომ მოვდოთ რაიმე ts კლასს, მიიღებს ამ კლასს პარამეტრად და დაბეჭდავს. შეგვიძლია პარამეტრიანი ფუნქცია გვქონდეს და ის აბრუნებდეს ფუნქციას რომელსაც მოვდეთ პარამეტრად კლასი, მაგალითად ასე.
+                                    
+                                    function LogClassWithParams(pref: string, suff: string) {
+                                      return (constructor: Function) => {
+                                        console.log(`${pref}\n\n Class decorator called for: ${constructor}\n\n ${suff}`)
+                                        console.log("-------------------")
+                                      }
+                                    }
+                                    
+
+
+
