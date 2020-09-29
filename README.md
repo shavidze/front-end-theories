@@ -258,6 +258,68 @@ template ფუნქციაში იყენებენ ანგულა
 
 
 
-20. **useClass** - 
+20. 
+  **useClass** - მოდი ცოტა გავშალოთ DI-ს თემა, როდესაც ჩვენ პროვაიდერებში ვარეგისტრირებთ კლასის სახელს, და შემდეგ უკვე ვცდილობთ ამ კლასის სახელით კონსტრუქტორში მივიღოთ ეს სერვის კლასი , ანგულარი აკეთებს ეგეთ რამეს: 
+     ეს providers: [MyService] გადაიწერება ასე 
+        providers: [ 
+              {
+                provide: MyService,
+                useClass: Myservice,
+               }
+         ]
+  ანუ რა გამოდის რომ ანგულარი ამ კლასის სახელის ტოკენზე არეგისტრირებს თავად ამ კლასს, ანუ გამოდის რომ ჩვენ მარტივად შეგვიძლია მაგ კლასის სახელზე სხვა კლასი გავწეროთ useClass - ში და უკვე სადაც დაველოდებით MyService მოვა სხვა კლასი რრასაც დავურეგისტრირებთ useClass: OtherService - ს მაგალითად.
+  **useValue** - მოდი განვიხილოთ ეს feature. ზოგჯერ გვსურს რომ კონსტრუქტორში მივიტანოთ დინამიურად არა რომელიმე სერვისი, არამედ რაიმე ობიექტი ან value, ზოგადად რომ ვთქვათ DI-ze , ეს არის მექანიზმი როცა ვიღაცას სურს რაღაცა დაირეგისტრიროს, მაგალითად კოსტრუქტორში ვიღაც ტიპს სურს myService იყოს, ან უბრალოდ რაიმე ობიექტი. მაგალითად გვაქვს რაღაც ობიექტი :
+    let myObject = { greeting: 'Hello DI!' }; და ეხლა ვარეგისტრირებთ ამ ობიექტს 
+    providers : [ 
+         {
+            provide: 'MyService' // აქ ჯობს უბრალოდ სტრინგზე დავარეგისტრიროთ ვიდრე რაიმე კლასზე 
+            useValue: myObject
+         }
+    ]
+    და უბრალოდ constructor(@Inject('MyService') myService) ასე დავარეგისტრირებთ ამ ტოკენით და რომ ჩავხედოთ უკვე myService.greeting იქნება 'Hello DI'.
+    
+   **useFactory** - ეს არის რაღაც ფუნქცია რის მიხედვითაც მოცემულ ტოკენზე დავრეგისტრირებთ რაიმე ლოგიკით VALUE-ს.
+  განსაკუთრებული არაფერი უბრალოდ ფუნქციაა და არა პირდაპირ useValue.
+  
+  ერთადერთი პრობლემა რასაც ვაწყდებით ხოლმე არის სახელების დამთხვევა ანუ collision , როცა ხან სტრინგად და ხან კლასად ვურეგისტრირებთ რაიმე ერთი და იმავე სახელს. ამის მარტივად მოსაგვარებლად ანგულარს აქვს InjectionToken რომელიც აბრუნებს ტოკენს და ამასთან ყველა ახალი ინსტანსი ამ კლასის არის განსხვავებული და არასდროს გვექნება ეს collision.
+  const NewToken = new InjectionToken<MyInterface>('token description');
+  
+  ყველაზე განსაკუთრებული feature მაინც არის მოდულისთვის დინამიურად დაგენერირებული პროვაიდერები. მაგალითად როდესაც ჩვენ ვწერთ რაიმე სერვის რომელსაც გარედან სჭირდება რაღაც config-ების გადმოცემა , რომ იყოს ჯენერიკი და შეძლოს ყველამ გამოიყენოს. მაგალითად მოდულში გვაქვს სერვისი რომელსაც სჭირდება ეგეთი config { spaceId, contentId } , რომელსაც უზერი გამოიყენებს დდინამიურად როცა რა დაჭირდება იმას გაატანს. ეს რომ სტატიკურად გვქონდეს უკვე დაიკარგება ლაიბრერად გამოყენების თემა. ამიტომ შეგვიძლია 
+  forRoot - ში დავარეგისტრიროთ გარედან რაც გვინდა .
+    const ContentfulConfigService = new InjectionToken<ContentfulConfig>("ContentfulConfig");//ConterfullConfig - ინტერფეისია უბრალოდ
+    @NgModule()
+      export class ContentfulModule {
+        static forRoot(config: ContentfulConfig): ModuleWithProviders {
+          return {
+            ngModule: ContentfulModule,
+            providers: [
+              ContentfulService,
+              {
+                provide: ContentfulConfigService,
+                useValue: config
+              }
+            ]
+          }
+        }
+      }
+    
+  და სადაც გამოვიყენებთ ამ მოდულს იქიდან გამოვატანს ამ კონფიგსაც. 
+  const contentfulConfig: ContentfulConfig = { 
+    spaceId: 'YOUR-SPACE-ID',
+    accessToken: 'YOUR-TOKEN'
+  }
+  ContentfulModule.forRoot(contentfulConfig) აი ასე. რაც შეეხება გამოყენებას: 
+  
+  ეს ContentfulService კონსტრუქტორში მიიღებს ამ config-ს :
+  
+  constructor(@Inject(ContentfulConfigService) private config)
+  
+  ანუ ამ config - ექნება spaceId-ც და contentId-ც.
+  //https://stackblitz.com/edit/angular-contentful-medium
+  
+  
+  
+      
+      
 
 
