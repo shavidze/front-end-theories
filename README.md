@@ -329,6 +329,8 @@ template ფუნქციაში იყენებენ ანგულა
   
   
   
+  21. Best practices to organize angular scalable project - https://medium.com/dev-jam/5-tips-best-practices-to-organize-your-angular-project-e900db08702e
+  
       
       
 
